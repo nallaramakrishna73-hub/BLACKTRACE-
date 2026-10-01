@@ -49,7 +49,7 @@ Return a structured JSON object answering the user's questions in clear, accessi
 - suggestedQuestions: Array of 3 short questions the user could ask next.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         systemInstruction: `You are BLACKTRACE AI, a defensive cybersecurity intelligence assistant.
@@ -173,7 +173,7 @@ TARGET ASSET INTELLIGENCE:
       const prompt = `Context: ${contextType}\n\n${assetContext}\n\nUser Question: ${question}\n\nPlease provide a clear, structured analysis answering what this is, what it means, why it matters, how security teams can use it, and what prioritized actions should be taken next.`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-2.5-flash',
         contents: prompt,
         config: {
           systemInstruction,

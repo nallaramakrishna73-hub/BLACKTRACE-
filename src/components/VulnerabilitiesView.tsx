@@ -139,11 +139,11 @@ export const VulnerabilitiesView: React.FC<VulnerabilitiesViewProps> = ({
               No matching CVEs found.
             </div>
           ) : (
-            vulnerabilities.map((vuln) => {
+            vulnerabilities.map((vuln, idx) => {
               const isSelected = selectedVuln?.cveId === vuln.cveId;
               return (
                 <div
-                  key={vuln.cveId}
+                  key={`vuln-${vuln.cveId}-${idx}`}
                   id={`vuln-card-${vuln.cveId}`}
                   onClick={() => setSelectedVuln(vuln)}
                   className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 ${

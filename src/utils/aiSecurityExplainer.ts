@@ -577,16 +577,19 @@ function explainRiskScore(score: number, data: any, assetContext?: Partial<Asset
  * Builds the complete AI Asset Summary structured analysis object.
  */
 export function buildAssetSummaryExplanation(asset: AssetIntelligence): AIAssetSummaryExplanation {
-  const vulnCount = asset.vulnerabilities.length;
-  const portCount = asset.openPorts.length;
-  const hasCritical = asset.vulnerabilities.some(v => v.severity === 'CRITICAL' || v.inCisaKev);
-  const exposedAdminPorts = asset.openPorts.filter(p => [22, 3389, 6379, 10250, 3306, 5432, 502].includes(p.port));
+  const vulns = asset.vulnerabilities || [];
+  const ports = asset.openPorts || [];
+  const techs = asset.technologies || [];
+  const vulnCount = vulns.length;
+  const portCount = ports.length;
+  const hasCritical = vulns.some(v => v.severity === 'CRITICAL' || v.inCisaKev);
+  const exposedAdminPorts = ports.filter(p => [22, 3389, 6379, 10250, 3306, 5432, 502].includes(p.port));
 
   const contributingFactors = [
     {
       factor: 'Exposed Internet Ports',
       impact: portCount > 4 ? 'high' as const : 'medium' as const,
-      description: `${portCount} publicly reachable port(s) detected (${asset.openPorts.map(p => p.port).join(', ')}).`
+      description: `${portCount} publicly reachable port(s) detected (${ports.map(p => p.port).join(', ')}).`
     },
     {
       factor: 'Vulnerability Severity',
@@ -612,8 +615,8 @@ export function buildAssetSummaryExplanation(asset: AssetIntelligence): AIAssetS
       priority: 1 as const,
       level: 'Critical' as const,
       title: 'Triage High-Severity CVEs',
-      action: `Review and patch software affected by ${asset.vulnerabilities.slice(0, 2).map(v => v.cveId).join(', ')}.`,
-      targetComponent: asset.vulnerabilities[0]?.affectedProduct || 'Software'
+      action: `Review and patch software affected by ${vulns.slice(0, 2).map(v => v.cveId).join(', ')}.`,
+      targetComponent: vulns[0]?.affectedProduct || 'Software'
     });
   }
 
@@ -647,7 +650,7 @@ export function buildAssetSummaryExplanation(asset: AssetIntelligence): AIAssetS
 
   return {
     whatIsThis: `This asset is an Internet-facing host (${asset.ip}${asset.domain ? ` / ${asset.domain}` : ''}) operated by ${asset.org} (${asset.asn}) in ${asset.city}, ${asset.country}.`,
-    whatDoesItMean: `The scan identified ${portCount} publicly reachable service port(s), ${asset.technologies.length} identified technology stack component(s), and ${vulnCount} recorded vulnerability record(s).`,
+    whatDoesItMean: `The scan identified ${portCount} publicly reachable service port(s), ${techs.length} identified technology stack component(s), and ${vulnCount} recorded vulnerability record(s).`,
     whyDoesItMatter: `Publicly exposed services increase the organization's external attack surface. Each open port and active software daemon represents a potential entry point that requires deliberate access controls and patch maintenance.`,
     howSecurityTeamsUseThis: [
       'Attack-surface management: Catalog all publicly accessible assets and ports.',
@@ -667,18 +670,18 @@ export function buildAssetSummaryExplanation(asset: AssetIntelligence): AIAssetS
     confidenceFindings: [
       {
         level: 'Observed',
-        text: `Port(s) ${asset.openPorts.map(p => p.port).join(', ')} are open and reachable over the Internet.`,
+        text: `Port(s) ${ports.map(p => p.port).join(', ')} are open and reachable over the Internet.`,
         evidence: 'Direct TCP/UDP probe handshake.'
       },
       {
         level: 'Inferred',
-        text: `Software stack includes ${asset.technologies.map(t => t.name).join(', ') || 'standard web services'}.`,
+        text: `Software stack includes ${techs.map(t => t.name).join(', ') || 'standard web services'}.`,
         evidence: 'HTTP response signatures and service banners.'
       },
       {
         level: vulnCount > 0 ? 'Confirmed' : 'Potential',
         text: vulnCount > 0 ? `${vulnCount} confirmed CVE advisory matches for detected software versions.` : 'No immediate CVE matches found in public databases.',
-        evidence: vulnCount > 0 ? asset.vulnerabilities.map(v => v.cveId).join(', ') : 'NVD database correlation.'
+        evidence: vulnCount > 0 ? vulns.map(v => v.cveId).join(', ') : 'NVD database correlation.'
       }
     ]
   };

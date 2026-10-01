@@ -182,9 +182,9 @@ export const SearchResultsView: React.FC<SearchResultsViewProps> = ({
               <ShieldAlert className="w-4 h-4 text-neutral-400" />
             </h3>
             <div className="space-y-1.5">
-              {data.aggregations.severities.map((s) => (
+              {data.aggregations.severities.map((s, sIdx) => (
                 <div 
-                  key={s.severity}
+                  key={`agg-sev-${s.severity}-${sIdx}`}
                   className="flex items-center justify-between p-1.5 rounded hover:bg-white/5 cursor-pointer text-neutral-300 transition-colors"
                   onClick={() => onFilterClick?.('severity', s.severity)}
                 >
@@ -225,9 +225,9 @@ export const SearchResultsView: React.FC<SearchResultsViewProps> = ({
               <Cpu className="w-4 h-4 text-neutral-400" />
             </h3>
             <div className="space-y-1.5">
-              {data.aggregations.technologies.slice(0, 6).map((t) => (
+              {data.aggregations.technologies.slice(0, 6).map((t, tIdx) => (
                 <div 
-                  key={t.name}
+                  key={`agg-tech-${t.name}-${tIdx}`}
                   className="flex items-center justify-between p-1.5 rounded hover:bg-white/5 cursor-pointer text-neutral-300 transition-colors"
                   onClick={() => onFilterClick?.('technology', t.name)}
                 >
@@ -245,9 +245,9 @@ export const SearchResultsView: React.FC<SearchResultsViewProps> = ({
               <Globe className="w-4 h-4 text-neutral-400" />
             </h3>
             <div className="space-y-1.5">
-              {data.aggregations.countries.slice(0, 5).map((c) => (
+              {data.aggregations.countries.slice(0, 5).map((c, cIdx) => (
                 <div 
-                  key={c.code}
+                  key={`agg-country-${c.code}-${cIdx}`}
                   className="flex items-center justify-between p-1.5 rounded hover:bg-white/5 cursor-pointer text-neutral-300 transition-colors"
                   onClick={() => onFilterClick?.('country', c.code)}
                 >
@@ -272,13 +272,13 @@ export const SearchResultsView: React.FC<SearchResultsViewProps> = ({
               </p>
             </div>
           ) : (
-            data.results.map((asset) => {
+            data.results.map((asset, aIdx) => {
               const sev = getSeverityStyle(asset.severity, asset.riskScore);
               const isSaved = savedAssetIds.includes(asset.id);
 
               return (
                 <article
-                  key={asset.id}
+                  key={`asset-card-${asset.id}-${asset.ip}-${aIdx}`}
                   id={`asset-card-${asset.id}`}
                   className={`p-5 sm:p-6 rounded-2xl bg-neutral-950/90 border ${sev.border} hover:border-white/40 transition-all duration-200 shadow-lg shadow-black/50 group relative backdrop-blur-md`}
                 >
@@ -408,9 +408,9 @@ export const SearchResultsView: React.FC<SearchResultsViewProps> = ({
                         Detected Technologies
                       </span>
                       <div className="flex flex-wrap gap-1.5">
-                        {asset.technologies.slice(0, 4).map((t) => (
+                        {asset.technologies.slice(0, 4).map((t, tIdx) => (
                           <div
-                            key={t.name}
+                            key={`asset-tech-${t.name}-${tIdx}`}
                             className="flex items-center gap-1 px-2 py-0.5 rounded bg-neutral-900 border border-white/10 text-neutral-300 text-[11px]"
                           >
                             <span>{t.name}</span>
@@ -439,9 +439,9 @@ export const SearchResultsView: React.FC<SearchResultsViewProps> = ({
                         </span>
                       ) : (
                         <div className="space-y-1">
-                          {asset.vulnerabilities.slice(0, 2).map((v) => (
+                          {asset.vulnerabilities.slice(0, 2).map((v, vIdx) => (
                             <div
-                              key={v.cveId}
+                              key={`asset-vuln-${v.cveId}-${vIdx}`}
                               className="w-full flex items-center justify-between p-1 rounded bg-neutral-900 hover:bg-neutral-800 border border-white/10 text-[11px] group/cve"
                             >
                               <button

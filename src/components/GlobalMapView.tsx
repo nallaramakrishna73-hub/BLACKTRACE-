@@ -94,12 +94,12 @@ export const GlobalMapView: React.FC<GlobalMapViewProps> = ({
             <circle cx="680" cy="380" r="35" fill="none" stroke="#ffffff" strokeOpacity="0.05" strokeWidth="1" />
 
             {/* Clusters Radar Rings */}
-            {mapData?.clusters.map((cluster) => {
+            {mapData?.clusters.map((cluster, idx) => {
               const pos = projectCoordinates(cluster.lat, cluster.lng);
               const isSelected = selectedCluster?.code === cluster.code;
               return (
                 <g 
-                  key={cluster.code}
+                  key={`cluster-${cluster.code}-${idx}`}
                   className="cursor-pointer transition-transform"
                   onClick={() => setSelectedCluster(cluster)}
                 >
@@ -136,11 +136,11 @@ export const GlobalMapView: React.FC<GlobalMapViewProps> = ({
             })}
 
             {/* Verified Host Asset Pins */}
-            {mapData?.assets.map((asset) => {
+            {mapData?.assets.map((asset, idx) => {
               const pos = projectCoordinates(asset.lat, asset.lng);
               return (
                 <g 
-                  key={asset.id} 
+                  key={`map-asset-${asset.id}-${idx}`} 
                   className="cursor-pointer group"
                   onClick={() => onSelectAsset(asset.ip)}
                 >

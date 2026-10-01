@@ -496,8 +496,8 @@ export const AssetDetailPage: React.FC<AssetDetailPageProps> = ({
                         <td className="p-3 text-right">
                           {p.cves && p.cves.length > 0 ? (
                             <div className="flex justify-end gap-1">
-                              {p.cves.map((c) => (
-                                <span key={c} className="px-1.5 py-0.5 rounded bg-white text-black font-bold text-[10px]">
+                              {p.cves.map((c, cIdx) => (
+                                <span key={`port-cve-${c}-${cIdx}`} className="px-1.5 py-0.5 rounded bg-white text-black font-bold text-[10px]">
                                   {c}
                                 </span>
                               ))}
@@ -564,8 +564,8 @@ export const AssetDetailPage: React.FC<AssetDetailPageProps> = ({
         {/* TAB 5: TECHNOLOGIES */}
         {activeTab === 'technologies' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-mono text-xs">
-            {asset.technologies.map((t) => (
-              <div key={t.name} className="p-4 rounded-xl bg-neutral-950/80 border border-white/10 space-y-3">
+            {asset.technologies.map((t, tIdx) => (
+              <div key={`tech-${t.name}-${tIdx}`} className="p-4 rounded-xl bg-neutral-950/80 border border-white/10 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-white text-sm">{t.name}</span>
                   <AIExplainButton
@@ -606,8 +606,8 @@ export const AssetDetailPage: React.FC<AssetDetailPageProps> = ({
                 </p>
               </div>
             ) : (
-              asset.vulnerabilities.map((vuln) => (
-                <div key={vuln.cveId} className="p-5 rounded-xl bg-neutral-950/90 border border-white/20 space-y-3">
+              asset.vulnerabilities.map((vuln, vIdx) => (
+                <div key={`vuln-${vuln.cveId}-${vIdx}`} className="p-5 rounded-xl bg-neutral-950/90 border border-white/20 space-y-3">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2 flex-wrap">
                       <button
@@ -843,7 +843,7 @@ export const AssetDetailPage: React.FC<AssetDetailPageProps> = ({
             {asset.subdomains && asset.subdomains.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {asset.subdomains.map((sub, idx) => (
-                  <div key={idx} className="p-3 rounded-lg bg-neutral-900 border border-white/10 text-white font-mono text-xs flex items-center justify-between">
+                  <div key={`sub-${sub}-${idx}`} className="p-3 rounded-lg bg-neutral-900 border border-white/10 text-white font-mono text-xs flex items-center justify-between">
                     <span className="truncate">{sub}</span>
                     <Globe className="w-3.5 h-3.5 text-neutral-400" />
                   </div>

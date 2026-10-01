@@ -59,9 +59,9 @@ export const TechnologiesView: React.FC<TechnologiesViewProps> = ({ onSearchTech
         {loading ? (
           <div className="col-span-full p-8 text-center text-neutral-500">Loading technologies...</div>
         ) : (
-          filtered.map((tech) => (
+          filtered.map((tech, idx) => (
             <div
-              key={tech.name}
+              key={`tech-${tech.name}-${idx}`}
               id={`tech-card-${tech.name.replace(/\s+/g, '-').toLowerCase()}`}
               className="p-5 rounded-xl bg-neutral-950/80 border border-white/10 hover:border-white/30 transition-all space-y-3 group backdrop-blur-md"
             >

@@ -245,8 +245,8 @@ export const ThreeGlobeBackground: React.FC<ThreeGlobeBackgroundProps> = ({
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      if (container && renderer && renderer.domElement) {
-        container.removeChild(renderer.domElement);
+      if (renderer?.domElement && renderer.domElement.parentElement) {
+        renderer.domElement.parentElement.removeChild(renderer.domElement);
       }
       renderer?.dispose();
     };
